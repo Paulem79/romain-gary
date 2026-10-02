@@ -23,8 +23,14 @@ function diff(new_array: string[], old_array: string[]): string[] {
     return new_array.filter(item => !old_array.includes(item));
 }
 
-async function trigger_diff(project: Project, difference: string[]) {
-    const channelId = project.project_types.includes("mod") ? "1369056776019906579" : "1369056846782005248";
+const MOD_ROLE = "<@&1369009317315088414>";
+const PLUGIN_ROLE = "<@&1369009253389570068>";
+
+async function trigger_diff(project: Project, difference: string[], mentioned: Set<string>) {
+    const isPlugin = project.project_types.includes("plugin");
+
+    const channelId = isPlugin ? "1369056846782005248" : "1369056776019906579";
+    const role = isPlugin ? PLUGIN_ROLE : MOD_ROLE;
     const channel = await client.channels.fetch(channelId);
     if(!channel || !channel.isTextBased() || !("send" in channel)) return;
 
@@ -39,12 +45,17 @@ async function trigger_diff(project: Project, difference: string[]) {
             .setDescription(version.changelog?.substring(0, 3000) || 'No changelog available')
             .setTimestamp(new Date(version.date_published))
             .setFooter({ text: 'Generated automatically at each release | Généré automatiquement à chaque release' });
-        await channel.send({ embeds: [embed] });
+
+        const content = mentioned.has(role) ? "" : role;
+        mentioned.add(role);
+        await channel.send({ content, embeds: [embed] });
     }
 }
 
 async function checkVersions() {
     console.log("Checking for new versions...");
+
+    const mentioned = new Set<string>();
 
     const projects = await modrinth.labrinth.users_v3.getProjects('Paulem79');
     for (const project of projects) {
@@ -58,7 +69,7 @@ async function checkVersions() {
             if(versionsIds.length > 0) {
                 const difference = diff(newVersionsIds, versionsIds);
                 if(difference.length > 0) {
-                    await trigger_diff(project, difference);
+                    await trigger_diff(project, difference, mentioned);
                 }
             }
 
