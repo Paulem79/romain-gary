@@ -83,5 +83,4 @@ client.once('clientReady', async(readyClient) => {
     }
 });
 
-// Connexion de notre bot à Discord
 client.login(process.env.DISCORD_TOKEN);
