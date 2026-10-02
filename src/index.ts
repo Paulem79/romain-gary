@@ -82,4 +82,11 @@ client.once('clientReady', async(readyClient) => {
     }
 });
 
+client.on("messageCreate", async(message) => {
+    // The good old days
+    if (message.content === '+ping') {
+        await message.reply(`🏓Latency is ${Date.now() - message.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms`);
+    }
+});
+
 client.login(process.env.DISCORD_TOKEN);
