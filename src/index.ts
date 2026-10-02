@@ -58,14 +58,13 @@ async function checkVersions() {
             if(versionsIds.length > 0) {
                 const difference = diff(newVersionsIds, versionsIds);
                 if(difference.length > 0) {
-                    console.log(`Nouvelles versions pour ${project.slug}:`, difference);
                     await trigger_diff(project, difference);
                 }
             }
 
             projects_versions.set(project.id, newVersionsIds);
         } catch (error) {
-            console.error(`Erreur pour ${project.slug}:`, error);
+            console.error(`Error for ${project.slug}:`, error);
         }
     }
 
