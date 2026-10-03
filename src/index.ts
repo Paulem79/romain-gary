@@ -84,8 +84,8 @@ async function checkVersions() {
 
 client.once('clientReady', async(readyClient) => {
     console.log(`Connected as ${readyClient.user.tag} !`);
-    readyClient.user.setStatus("online");
-    readyClient.user.setActivity("les publications Modrinth", { type: 3 })
+    readyClient.user.setStatus("dnd");
+    readyClient.user.setActivity("Regarde les publications Modrinth", { type: 3 })
 
     try {
         await checkVersions();
@@ -98,7 +98,7 @@ client.once('clientReady', async(readyClient) => {
 client.on("messageCreate", async(message) => {
     // The good old days
     if (message.content === '+ping') {
-        await message.reply(`🏓Latency is ${Date.now() - message.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms`);
+        await message.reply(`🏓 Latency is ${Date.now() - message.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms`);
     }
 });
 
