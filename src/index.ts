@@ -84,6 +84,8 @@ async function checkVersions() {
 
 client.once('clientReady', async(readyClient) => {
     console.log(`Connected as ${readyClient.user.tag} !`);
+    readyClient.user.setStatus("online");
+    readyClient.user.setActivity("les publications Modrinth", { type: 3 })
 
     try {
         await checkVersions();
