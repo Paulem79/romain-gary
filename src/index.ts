@@ -57,7 +57,14 @@ async function checkVersions() {
 
     const mentioned = new Set<string>();
 
-    const projects = await modrinth.labrinth.users_v3.getProjects('Paulem79');
+    let projects: Project[];
+    try {
+        projects = await modrinth.labrinth.users_v3.getProjects('Paulem79');
+    } catch (error) {
+        console.error("Error fetching projects (will retry next tick):", error);
+        return;
+    }
+
     for (const project of projects) {
         if(project.status != "approved") continue;
 
